@@ -3,11 +3,11 @@ let birds = [];
 function setup() {
     createCanvas(500, 500);
     background(55);
+    // Degrees beacause why not
     angleMode(DEGREES);
-
-    bird = new Bird(200, 200, .5)
 }
 
+// Add bird new birds when the mouse is clicked
 function mousePressed() {
     birds.push(
         new Bird(
@@ -24,7 +24,6 @@ function draw() {
     birds.forEach(bird => {
         bird.chase(createVector(mouseX, mouseY))
         bird.push()
-
 
         bird.update();
         bird.draw();
