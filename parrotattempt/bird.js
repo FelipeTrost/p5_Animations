@@ -11,10 +11,10 @@ function Bird(x, y, scale) {
 
     this.wingAngle = 45
     this.wingLength = 45 * scale
-    this.wingDirection = 4
-    this.wingThickness = 8 * scale
+    this.wingDirection = 5
+    this.wingThickness = 7 * scale
 
-    this.heightFluctuation = 2 * scale
+    this.heightFluctuation = 2.5 * scale
 
     this.maxspeed = map(scale, .5, 1.5, 3, 1);
 
@@ -75,29 +75,57 @@ function Bird(x, y, scale) {
             this.wingDirection *= -1
 
         this.wingAngle += this.wingDirection
+
+        // Check that the bird doen't go off bounds
+        this.x = min(this.x, width)
+        this.x = max(this.x, 0)
+
+        this.y = min(this.y, height)
+        this.y = max(this.y, 0)
     }
 
     this.draw = () => {
+        // Feet
+        stroke(255, 255, 0)
+        strokeWeight(2)
+        line(
+            this.x - this.torzo[0] / 4, this.y + 2 * this.torzo[1] / 8,
+            this.x + 4, this.y + this.torzo[1] * .6
+        )
+        line(
+            this.x - this.torzo[0] / 4, this.y + 2 * this.torzo[1] / 8,
+            this.x - 4, this.y + this.torzo[1] * .6
+        )
+
         // Body
         fill(230, 100, 100);
         stroke(230, 100, 100);
 
         this.rotatedEllipse(this.x, this.y, ...this.torzo, this.bodyTilt);
 
+        // For orientation
+        const headX = this.x + this.torzo[0];
+        const headY = this.y - this.torzo[1] * .8
+
         // Horn
         fill(50, 200, 200);
         stroke(50, 200, 200);
         triangle(
-            this.x + this.torzo[0] + 5, this.y - this.torzo[1] * .8,
-            this.x + this.torzo[0] + 5, this.y - this.torzo[1] * .8 + 3,
-            this.x + map(this.scale, 0.5, 1.5, 15, 40) + 5, this.y - this.torzo[1] * .8 + 7,
+            headX + this.headRadius / 2, headY - this.headRadius / 8,
+            headX + this.headRadius / 2, headY + this.headRadius / 8,
+            headX + this.headRadius, headY + this.headRadius / 8,
         );
 
         // Head
         fill(230, 100, 100);
         stroke(230, 100, 100);
 
-        circle(this.x + this.torzo[0], this.y - this.torzo[1] * .8, this.headRadius);
+        circle(headX, headY, this.headRadius);
+
+        // Eye
+        stroke(0);
+        strokeWeight(map(this.scale, .5, 1.5, 3, 7));
+        point(headX + 3, headY - 5);
 
 
         // Wing
